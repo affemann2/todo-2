@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+	<style>
+	#header {
+		text-align: center;
+		font-family: arial;
+		font-size: 100%;
+		border-bottom: solid #668cff; 
+		width: 100%;
+		padding: 1px;
+	}
+
+	#form{ 
+		padding-top: 1%; 
+		padding-left: 35%;
+	}
+
+	#todo {		
+		width: 35%;
+	}
+
+	#tasklist{
+		padding-left: 33%;
+	}
+
+	#list {
+		font-family: arial;
+		list-style-type: radio;
+	}
+
+	.highlighted {
+			font-weight:bold;
+		}
+	.container{
+		padding-left:32%;
+		padding-top:1%;
+	}
+	</style>    
+</head>
+
+<body>
+	<div id = "header">
+		<h1> To Do List</h1>
+	</div>
+
+	<div class ="container">
+		<input id = "txtEmail" type = "email" placeholder = "Email">
+
+		<input id = "txtPassword" type = "password" placeholder = "Password">
+
+		<button id = "btnLogin" class = "btn btn-action"> Log in </button>
+
+		<button id = "btnSignUp" class = "btn btn-secondary"> Sign up </button>
+
+		<button id = "btnLogout" class = "btn btn-action hide"> Log out </button>
+	</div>
+
+	<div id = "form">
+		<form>
+			<input type = "text" id = "todo"> 
+			<button type = "button" id= "submit"> Submit </button>
+		</form>
+	</div>
+
+	<div id = "tasklist">
+		<ol id = "list">
+			<li id = "listitem"><input type = "checkbox" class="checkbox" > boob</li>
+			
+		</ol>
+	</div>
+	
+	
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"
+	  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	  crossorigin="anonymous"></script>
+
+
+	<script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+
+	<script>
+	  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyA5_PD1jeNYnZS950CC8fDF7zSDuly8Bms",
+	    authDomain: "todolist-33085.firebaseapp.com",
+	    databaseURL: "https://todolist-33085.firebaseio.com",
+	    storageBucket: "todolist-33085.appspot.com",
+	    messagingSenderId: "336029816964"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+	<script type="text/javascript" src="todo.js"></script>
+
+</body>
