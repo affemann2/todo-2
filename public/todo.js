@@ -17,14 +17,14 @@ window.onload = function(){
 		};
 
 	//Strike through task if click on text
-	$("li").click(function(){
+	$(document).on('click', 'li', function(){
 		$(this).css("text-decoration", "line-through");
 	});
 
 	//Remove task when click checkbox
-	$(".checkbox").click(function(){
+	$(document).on('change', '.checkbox', function(){
 		$(this).parent().hide();
-	})
+	});
 
 	//User Authentification using firebase
 	//Get elements
