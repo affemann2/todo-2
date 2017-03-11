@@ -67,7 +67,9 @@ window.onload = function(){
 			console.log('not logged in');
 		}
 	});
-
+asdasdf
+asdfasdfasd
+asdfasdfasdf
 };
 
 
