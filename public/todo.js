@@ -1,5 +1,8 @@
 window.onload = function(){
 
+	var task; 
+	var userId;
+
 	//Add new to do task by entering text and clicking submit
 	var submit = document.getElementById('submit');
 	submit.onclick = function(){
@@ -10,10 +13,21 @@ window.onload = function(){
 		entry.id = 'id'
 		var checkbox = document.createElement('input');
 		checkbox.type = "checkbox";
-		checkbox.className = "checkbox"
-		entry.appendChild(checkbox)
+		checkbox.className = "checkbox";
+		checkbox.id = firebaseKey;
+		entry.appendChild(checkbox);
 		entry.appendChild(document.createTextNode(task));
 		ol.appendChild(entry);
+
+		var firebaseKey = firebase.database().ref().child(userId).push().key;
+		console.log(firebaseKey);
+
+		var firebaseRef = firebase.database().ref().child(userId);
+		firebaseRef.push({
+				task,
+				value: "true",
+			});
+		
 		};
 
 	//Strike through task if click on text
@@ -24,6 +38,11 @@ window.onload = function(){
 	//Remove task when click checkbox
 	$(document).on('change', '.checkbox', function(){
 		$(this).parent().hide();
+		var firebasedelete = firebase.database().ref().child(userId).child("value");
+		firebasedelete.set({
+			value:false
+		});
+
 	});
 
 	//User Authentification using firebase
@@ -62,7 +81,15 @@ window.onload = function(){
 	//Add a realtime listener
 	firebase.auth().onAuthStateChanged(firebaseUser => {
 		if(firebaseUser){
-			console.log("firebaseUser");
+			console.log(firebaseUser);
+			userId = firebaseUser.uid;
+			console.log(userId);
+			var firebaseSync = firebase.database().ref().child(userId);
+			firebaseSync.on('child_added', snap =>{
+				console.log(snap.val());
+				var task = snap.child("task").val();
+				$("#list").append("<li><input type = 'checkbox' class='checkbox' > " + task + "</li>")
+			})	
 		} else {
 			console.log('not logged in');
 		}
