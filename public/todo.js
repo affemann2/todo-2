@@ -8,27 +8,13 @@ window.onload = function(){
 	submit.onclick = function(){
 		var task = document.getElementById('todo').value;
 		console.log(task);
-		var ol = document.getElementById("list")
-		var entry = document.createElement('li');
-		entry.id = 'id'
-		var checkbox = document.createElement('input');
-		checkbox.type = "checkbox";
-		checkbox.className = "checkbox";
-		checkbox.id = firebaseKey;
-		entry.appendChild(checkbox);
-		entry.appendChild(document.createTextNode(task));
-		ol.appendChild(entry);
-
-		var firebaseKey = firebase.database().ref().child(userId).push().key;
-		console.log(firebaseKey);
-
-		var firebaseRef = firebase.database().ref().child(userId);
-		firebaseRef.push({
-				task,
-				value: "true",
-			});
 		
-		};
+		var newTodoRef = todosRef.push();
+		newTodoRef.set({
+		    title : task,
+		    done : false
+		});	
+	};
 
 	//Strike through task if click on text
 	$(document).on('click', 'li', function(){
@@ -36,13 +22,11 @@ window.onload = function(){
 	});
 
 	//Remove task when click checkbox
-	$(document).on('change', '.checkbox', function(){
-		$(this).parent().hide();
-		var firebasedelete = firebase.database().ref().child(userId).child("value");
-		firebasedelete.set({
-			value:false
-		});
-
+	$('#list').on('change', '.checkbox', function(){
+		var $li = $(this).closest('li');
+		var todo = $li.data('todo');
+		console.log('firebase todo', todo);
+		todosRef.child(todo.key).remove();
 	});
 
 	//User Authentification using firebase
@@ -78,18 +62,38 @@ window.onload = function(){
 		firebase.auth().signOut();
 	});
 
+
+	var userDataRef = null,
+		todosRef = null;;
+
 	//Add a realtime listener
 	firebase.auth().onAuthStateChanged(firebaseUser => {
 		if(firebaseUser){
 			console.log(firebaseUser);
 			userId = firebaseUser.uid;
 			console.log(userId);
-			var firebaseSync = firebase.database().ref().child(userId);
-			firebaseSync.on('child_added', snap =>{
-				console.log(snap.val());
-				var task = snap.child("task").val();
-				$("#list").append("<li><input type = 'checkbox' class='checkbox' > " + task + "</li>")
-			})	
+				
+			// userDataRef = firebase.database().ref().child('users').child(userId);
+			userDataRef = firebase.database().ref('users/' + userId);
+
+			todosRef = userDataRef.child('todos'); // /users/[userId]/todos
+
+			todosRef.on('value', snapshot =>{
+				console.log(snapshot.val());
+
+				$("#list").empty();
+
+				snapshot.forEach(function(childSnapshot) {
+				    var childKey = childSnapshot.key;
+				    var childData = childSnapshot.val();
+				  	console.log('child', childKey, childData);
+
+				  	var $li = $("<li><input type = 'checkbox' class='checkbox' > " + childData.title + "</li>");
+				  	$li.data('todo', childSnapshot);
+
+					$("#list").append($li)
+				  });
+			})
 		} else {
 			console.log('not logged in');
 		}
